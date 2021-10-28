@@ -22,7 +22,9 @@ const options = {
 app.use(cors(options));
 
 app.get('/', (req, res) => {
-  res.send('Hola, este es mi primer servidor!')
+  res.send(`Hola! Este es el primer servidor programado por Tommy 😎💪💚
+   Fue construido sobre NodeJS usando ExpressJS.
+   Puedes probar la API en: https://obscure-bayou-83657.herokuapp.com/api/v1/products`)
 });
 
 

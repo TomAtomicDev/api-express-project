@@ -1,0 +1,13 @@
+version: '3.3'   
+services:
+
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    env_file:
+      - dbcredentials.env
+    volumes:
+      - ./postreSQL_data:/var/lib/postgresql/data/

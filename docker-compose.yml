@@ -8,6 +8,17 @@ services:
       - "5432:5432"
     restart: unless-stopped
     env_file:
-      - dbcredentials.env
+      - .env
     volumes:
       - ./postreSQL_data:/var/lib/postgresql/data/
+  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "5050:80"
+    
+  

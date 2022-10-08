@@ -17,3 +17,9 @@ const updateCategorySchema = Joi.object({
 const getCategorySchema = Joi.object({
   id: id.required()
 });
+
+module.exports = {
+  createCategorySchema,
+  updateCategorySchema,
+  getCategorySchema
+};

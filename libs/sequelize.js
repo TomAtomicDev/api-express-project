@@ -12,6 +12,6 @@ const sequelize = new Sequelize(URI, {
 }); // Se crea una instancia de Sequelize, ya gestiona el pooling.
 
 setupModels(sequelize);
-sequelize.sync();
+//sequelize.sync(); No es una buena práctica, mejor implementar migraciones.
 
 module.exports = sequelize;

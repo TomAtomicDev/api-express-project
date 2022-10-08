@@ -5,7 +5,8 @@ const routerApi = require("./Routers"); //el archivo index.js se busca en automÃ
 const {
   logErrors,
   errorHandler,
-  boomErrorHandler
+  boomErrorHandler,
+  ormErrorHandler
 } = require("./middlewares/error.handler");
 
 const app = express();
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 routerApi(app); // Este es el index.js de routing con express como atributo
 
 app.use(logErrors); //Es muy importante poner este primero xq lleva el next
+app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 

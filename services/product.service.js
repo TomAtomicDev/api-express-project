@@ -1,4 +1,5 @@
 const { models } = require("../libs/sequelize");
+const { Op } = require("sequelize");
 const faker = require("faker");
 faker.locale = "es";
 const boom = require("@hapi/boom");
@@ -26,15 +27,28 @@ class ProductsService {
   }
 
   async find(query) {
-    const options = {
-      include: ["category"]
+    const optionsDefault = {
+      include: ["category"],
+      where: {}
     };
+
     const { limit, offset } = query;
     if (limit && offset) {
-      options.limit = limit;
-      options.offset = offset;
+      optionsDefault.limit = limit;
+      optionsDefault.offset = offset;
     }
-    const allProducts = await models.Product.findAll(options);
+
+    const { price, price_max, price_min } = query;
+    if (price) {
+      optionsDefault.where.price = price;
+    }
+    if (price_max && price_min) {
+      optionsDefault.where.price = {
+        [Op.between]: [price_min, price_max]
+      };
+    }
+
+    const allProducts = await models.Product.findAll(optionsDefault);
     return allProducts;
   }
 

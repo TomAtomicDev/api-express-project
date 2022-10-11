@@ -3,14 +3,19 @@ const { Sequelize } = require("sequelize");
 const { config } = require("../config/config");
 const setupModels = require("../db/models/");
 
-const USER = encodeURIComponent(config.dbUser);
-const PASSWORD = encodeURIComponent(config.dbPassword);
-const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
+const options = {
+  dialect: "postgres"
+};
 
-const sequelize = new Sequelize(URI, {
-  dialect: "postgres" /* logging: true */
-}); // Se crea una instancia de Sequelize, ya gestiona el pooling.
+if (config.isProd) {
+  options.dialectOptions = {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  };
+}
 
+const sequelize = new Sequelize(config.dbUrl, options);
 setupModels(sequelize);
 //sequelize.sync(); No es una buena práctica, mejor implementar migraciones.
 

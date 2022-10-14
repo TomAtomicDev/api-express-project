@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { checkApiKey } = require("./middlewares/auth.handler");
 
 const routerApi = require("./Routers"); //el archivo index.js se busca en automático
 const {
@@ -27,7 +28,11 @@ const options = {
 app.use(cors(options));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/welcome.html");
+  res.sendFile(__dirname + "/index.html");
+});
+
+app.get("/nueva", checkApiKey, (req, res) => {
+  res.sendFile(__dirname + "/index.html");
 });
 
 routerApi(app); // Este es el index.js de routing con express como atributo

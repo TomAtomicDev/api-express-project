@@ -28,6 +28,7 @@ function boomErrorHandler(error, request, response, next) {
   }
   next(error);
 }
+
 function ormErrorHandler(err, req, res, next) {
   if (err instanceof ValidationError) {
     res.status(409).json({

@@ -9,7 +9,8 @@ const config = {
   dbHost: process.env.POSTGRES_HOST,
   dbName: process.env.POSTGRES_NAME,
   dbPort: process.env.POSTGRES_PORT,
-  dbUrl: process.env.DATABASE_URL
+  dbUrl: process.env.DATABASE_URL,
+  apiKey: process.env.API_KEY
 };
 
 module.exports = { config };

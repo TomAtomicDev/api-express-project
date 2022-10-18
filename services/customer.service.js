@@ -11,18 +11,29 @@ class CustomerService {
     return rta;
   }
 
+  async findByUser(userId) {
+    const customer = await models.Customer.findOne({
+      where: { userId: userId }
+    });
+    if (!customer) {
+      throw boom.notFound("Sorry, user not found");
+    }
+    return customer;
+  }
+
   async findOne(id) {
-    const user = await models.Customer.findByPk(id);
-    if (!user) {
+    const customer = await models.Customer.findByPk(id);
+    if (!customer) {
       throw boom.notFound("Sorry, customer not found");
     }
-    return user;
+    return customer;
   }
 
   async create(data) {
     const newCustomer = await models.Customer.create(data, {
       include: ["user"]
     });
+    delete newCustomer.user.dataValues.password;
     return newCustomer;
   }
 

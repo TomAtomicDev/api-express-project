@@ -27,6 +27,8 @@ const options = {
 };
 app.use(cors(options));
 
+require("./utils/auth/index.js");
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });

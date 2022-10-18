@@ -12,7 +12,7 @@ const getOrderSchema = Joi.object({
 });
 
 const createOrderSchema = Joi.object({
-  customerId: customerId.required(),
+  /* customerId: customerId.required(), */ //Lo vamos a sacar del Token
   paymentMethod: paymentMethod.required()
 });
 

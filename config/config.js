@@ -10,7 +10,10 @@ const config = {
   dbName: process.env.POSTGRES_NAME,
   dbPort: process.env.POSTGRES_PORT,
   dbUrl: process.env.DATABASE_URL,
-  apiKey: process.env.API_KEY
+  apiKey: process.env.API_KEY,
+  jwtSecret: process.env.JWT_SECRET,
+  nodeMailerUser: process.env.NODE_MAILER_USER,
+  nodeMailerPassword: process.env.NODE_MAILER_PASS
 };
 
 module.exports = { config };

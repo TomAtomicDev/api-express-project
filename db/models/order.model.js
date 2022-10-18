@@ -35,12 +35,14 @@ const OrderSchema = {
     type: DataTypes.VIRTUAL,
     field: "total_to_pay",
     get() {
-      if (this.products.length > 0) {
-        return this.products.reduce((total, product) => {
-          return total + product.price * product.OrderProduct.itemsAmount;
-        }, 0);
+      if (this.products) {
+        if (this.products.length > 0) {
+          return this.products.reduce((total, product) => {
+            return total + product.price * product.OrderProduct.itemsAmount;
+          }, 0);
+        }
+        return 0;
       }
-      return 0;
     }
   }
 };

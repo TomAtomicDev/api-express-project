@@ -12,8 +12,13 @@ const config = {
   dbUrl: process.env.DATABASE_URL,
   apiKey: process.env.API_KEY,
   jwtSecret: process.env.JWT_SECRET,
-  nodeMailerUser: process.env.NODE_MAILER_USER,
-  nodeMailerPassword: process.env.NODE_MAILER_PASS
+  smtp: {
+    user: process.env.NODE_MAILER_USER,
+    password: process.env.NODE_MAILER_PASS,
+    host: process.env.NODE_MAILER_HOST,
+    port: process.env.NODE_MAILER_PORT
+  }
+  
 };
 
 module.exports = { config };

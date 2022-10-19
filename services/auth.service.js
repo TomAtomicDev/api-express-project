@@ -1,15 +1,16 @@
 const boom = require("@hapi/boom");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 
 const { config } = require("./../config/config");
 const UserService = require("./user.service");
-const service = new UserService();
+const MailService = require("./mail.service");
+const userService = new UserService();
+const mailService = new MailService();
 
 class AuthService {
   async getUser(email, password) {
-    const user = await service.findByEmail(email);
+    const user = await userService.findByEmail(email);
     if (!user) {
       throw boom.unauthorized();
     }
@@ -33,28 +34,43 @@ class AuthService {
     };
   }
 
-  async sendMail(email) {
-    const user = await service.findByEmail(email);
+  async sendRecovery(email) {
+    const user = await userService.findByEmail(email);
     if (!user) {
-      throw boom.unauthorized(); // Para evitar un ataque de fuerza bruta, no enviar un mensaje de 'This email does not exist in our DB'
+      throw boom.unauthorized("There is a problem sending a recovery mail");
     }
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      secure: true, // true for 465, false for other ports
-      port: 465,
-      auth: {
-        user: config.nodeMailerUser,
-        pass: config.nodeMailerPassword
+    const payload = { sub: user.id };
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: "15min" });
+    const link = `http://myfrontend.com/recovery?token=${token}`;
+    await userService.update(user.id, { recoveryToken: token });
+
+    const mail = {
+      from: "Anita de Platzi",
+      to: `${user.email}`,
+      subject: "Email para recuperar contraseña",
+      html: `<b>Ingresa a este link => ${link}</b>`
+    };
+    const rta = await mailService.sendMail(mail);
+    return rta;
+  }
+
+  async changePassword(token, newPassword) {
+    const payload = jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) {
+        throw boom.notAcceptable(err.name);
       }
+      return decoded;
+    }); //como saber si el token expiró?
+    const user = await userService.findOne(payload.sub);
+    if (token !== user.recoveryToken) {
+      throw boom.notAcceptable("Sorry, valid but not the same token");
+    }
+
+    await userService.update(user.id, {
+      recoveryToken: null,
+      password: newPassword
     });
-    await transporter.sendMail({
-      from: "example@gmail.com", // sender address
-      to: `${user.email}`, // list of receivers
-      subject: "Este es un nuevo correo", // Subject line
-      text: "Hola broo", // plain text body
-      html: "<b>Hola amigo/a</b>" // html body
-    });
-    return { message: "mail sent" };
+    return { message: "password changed successfully" };
   }
 }
 

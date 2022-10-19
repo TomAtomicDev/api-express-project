@@ -4,6 +4,7 @@ const { CATEGORY_TABLE } = require("./../models/category.model");
 const { PRODUCT_TABLE } = require("./../models/product.model");
 const { ORDER_TABLE } = require("./../models/order.model");
 const { ORDER_PRODUCT_TABLE } = require("./../models/order-product.model");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -35,6 +36,14 @@ module.exports = {
         defaultValue: Sequelize.NOW
       }
     });
+    const hash = await bcrypt.hash("admin123", 10);
+    await queryInterface.bulkInsert(USER_TABLE, [
+      {
+        email: "admin@mail.com",
+        password: hash,
+        role: "admin"
+      }
+    ]);
     await queryInterface.createTable(CUSTOMER_TABLE, {
       id: {
         allowNull: false,

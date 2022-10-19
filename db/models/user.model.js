@@ -29,6 +29,11 @@ const UserSchema = {
     type: DataTypes.DATE,
     field: "created_at",
     defaultValue: Sequelize.NOW
+  },
+  recoveryToken: {
+    field: "recovery_token",
+    allowNull: true,
+    type: DataTypes.STRING
   }
 };
 
@@ -48,6 +53,10 @@ class User extends Model {
       timestamps: false,
       hooks: {
         beforeCreate: async (user, options) => {
+          const password = await bcrypt.hash(user.password, 10);
+          user.password = password;
+        },
+        beforeUpdate: async (user, options) => {
           const password = await bcrypt.hash(user.password, 10);
           user.password = password;
         }
